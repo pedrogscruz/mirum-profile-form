@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { RenderField } from './RenderField';
 import InputMask from 'react-input-mask';
 import { Input } from 'antd';
@@ -13,7 +13,7 @@ export type IField = WrappedFieldProps & CustomFieldProps;
 const RenderMask = RenderField((props: IField) => {
   const { input, mask } = props;
   return (
-    <InputMask value={''} mask={mask} {...input}>
+    <InputMask value={''} mask={mask} {...input} alwaysShowMask={false}>
       {(maskProps: any) => <Input {...maskProps} disabled={maskProps.disabled ? maskProps.disabled : null} />}
     </InputMask >
   );

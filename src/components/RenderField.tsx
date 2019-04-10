@@ -1,37 +1,31 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import { WrappedFieldProps } from 'redux-form';
-import { Alert, Row, Col, Typography } from 'antd';
-const { Title } = Typography;
+import { Form, Alert } from 'antd';
 
 interface CustomFieldProps {
   name: string;
-  label: string;
+  label?: string;
+  component?: any;
   children?: Element;
   mask?: string;
   min?: number;
   max?: number;
   type?: string;
   message?: string;
-  marks?: {[key: number]: {style: any, label: string}};
+  marks?: {[key: number]: string};
   defaultMarkValue?: number;
 }
 
 export type IField = WrappedFieldProps & CustomFieldProps;
 
-const DemoBox = (props: {value: string, children: Element}) => <p className={`height-${props.value}`}>{props.children}</p>;
-
 const RenderField = (render: Function) => (props: IField) => {
-  const { input, meta: { touched, error, active }, label, ...rest } = props;
-  const validatedError = touched && error;
+  const { input, meta: { touched, error }, label, ...rest } = props;
 
   return (
-    <Fragment>
-      <Row>
-        <Col span={8}><Title></Title>{label}</Col>
-        <Col span={16}>{render({input, label, ...rest})}</Col>
-      </Row>
-      {validatedError && <Alert {...error} />}
-    </Fragment>
+    <Form.Item {...label ? {label} : {wrapperCol: {xs: {span: 24, offset: 0}, sm: {span: 20, offset: 4}}}} >
+      {render({input, label, ...rest})}
+      {touched && error && <Alert {...error} />}
+    </Form.Item>
   )
 }
 

@@ -1,9 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
 import isValidEmail from 'sane-email-validation';
 import { RouteComponentProps } from 'react-router-dom';
 import { css } from 'aphrodite';
-import { Row, Col } from 'antd'
+import { Form as AntForm, Button, Row, Col } from 'antd';
 
 import classes from './FormStyles';
 import RenderInput from '../components/RenderInput';
@@ -15,7 +15,7 @@ import RenderCheck from '../components/RenderCheck';
 
 type IForm = {
   firstName: string;
-  idade: number;
+  age: number;
   members: Array<any>;
 }
 
@@ -25,8 +25,10 @@ interface IErrors {
 
 const validate = (values:IForm) => {
   let errors:IErrors = {};
+  console.log(values);
   if (!values.firstName)
-    errors.nome = {type: 'warning', message: 'Campo obrigatório'};
+    errors.firstName = {type: 'warning', message: 'Campo obrigatório'};
+  console.log(errors);
   return errors;
 }
 
@@ -38,7 +40,11 @@ class Form extends React.Component<RouteComponentProps> {
     const { handleSubmit, pristine, reset, submitting } = props;
 
     return (
-      <form onSubmit={handleSubmit(this.redirectToProfile)}>
+      <AntForm
+        onSubmit={handleSubmit(this.redirectToProfile)}
+        labelCol={{ xs: { span: 24 }, sm: { span: 4 } }}
+        wrapperCol={{ xs: { span: 24 }, sm: { span: 20 } }}
+      >
         <Field
           name="firstName"
           type="text"
@@ -48,15 +54,17 @@ class Form extends React.Component<RouteComponentProps> {
         <Field
           min={0}
           max={3}
-          name="age"
-          label="Idade"
+          name='age'
+          label='Idade'
           defaultMarkValue={0}
           marks={{
-            0: {style: {}, label: '13-19'},
-            1: {style: {}, label: '20-29'},
-            2: {style: {}, label: '30-35'},
-            3: {style: {}, label: '45 e acima'}
+            0: '13-19',
+            1: '20-29',
+            2: '30-35',
+            3: '45 e acima'
           }}
+          included={false}
+          tooltipVisible={false}
           component={RenderSlider}
         />
         <Field
@@ -79,23 +87,25 @@ class Form extends React.Component<RouteComponentProps> {
 
         </Field>
         <Field
-          name="country"
           label="País"
+          name="country"
           component={RenderSelect}
         >
           
         </Field>
-        <RenderInterests name="interests" label="" />
+        <AntForm.Item label="Interesses">
+          <RenderInterests name="interests" />
+        </AntForm.Item>
         <Field
           name="news"
-          mask="Desejo receber novidade por e-mail"
+          message="Desejo receber novidade por e-mail"
           component={RenderCheck}
         />
-        <div>
-          <button type="submit" disabled={submitting}>Submit</button>
-          <button type="button" disabled={pristine || submitting} onClick={reset}>Clear Values</button>
-        </div>
-      </form>
+        <AntForm.Item wrapperCol={{xs: {span: 24, offset: 0}, sm: {span: 20, offset: 4}}}>
+          <Button type="primary" htmlType="submit">Salvar</Button>
+        </AntForm.Item>
+        {/* <Button disabled={pristine || submitting} onClick={reset}>Clear Values</button> */}
+      </AntForm>
     )
   };
 
@@ -107,7 +117,7 @@ class Form extends React.Component<RouteComponentProps> {
 
   render() {
     return(
-      <Row>
+      <Row className={css(classes.container)}>
         <Col span={14} offset={5}>
           <this.ReduxForm />
         </Col>

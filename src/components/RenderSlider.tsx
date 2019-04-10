@@ -1,5 +1,5 @@
-import * as React from 'react';
-import Slider from 'rc-slider';
+import React from 'react';
+import { Slider } from 'antd';
 import { RenderField } from './RenderField';
 import { WrappedFieldProps } from 'redux-form';
 
@@ -9,13 +9,14 @@ interface CustomFieldProps {
   label: string;
   marks: {[key: number]: {style: any, label: string}};
   defaultMarkValue: number;
+  included: boolean;
 }
 
 export type IField = WrappedFieldProps & CustomFieldProps;
 
 const renderSlider = RenderField((props: IField) => {
-  const { input: {onChange}, defaultMarkValue, marks, min, max } = props;
-  return <Slider defaultValue={defaultMarkValue} marks={marks} min={min} max={max} onAfterChange={onChange} />
+  const { input: {onChange}, defaultMarkValue, ...rest } = props;
+  return <Slider defaultValue={defaultMarkValue} onAfterChange={onChange} {...rest} />
 });
 
 export default renderSlider;

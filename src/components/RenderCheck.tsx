@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { RenderField, IField } from './RenderField';
 import { Checkbox } from 'antd';
 

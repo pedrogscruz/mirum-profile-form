@@ -1,6 +1,6 @@
 import { StyleSheet } from 'aphrodite';
 export default StyleSheet.create({
-  container: {
-    paddingTop: '40px'
-  }
+	row: {
+		padding: '20px 0px'
+	}
 });
