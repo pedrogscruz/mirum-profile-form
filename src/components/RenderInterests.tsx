@@ -56,7 +56,7 @@ class renderMembers extends React.Component<WrappedFieldArrayProps<string>> {
           <Input
             type="text"
             size="small"
-            style={{ width: 78 }}
+            style={{ width: 110 }}
             ref={(ref) => this.inputRef = ref}
             onBlur={this.handleInputConfirm}
             onPressEnter={this.handleInputConfirm}
@@ -67,7 +67,7 @@ class renderMembers extends React.Component<WrappedFieldArrayProps<string>> {
             onClick={() => this.setState({inputVisible: true}, () => this.inputRef && this.inputRef.focus())}
             style={{ background: '#fff', borderStyle: 'dashed' }}
           >
-            <Icon type="plus" /> New Tag
+            <Icon type="plus" /> Novo Interesse
           </Tag>
         )}
       </Fragment>

@@ -4,6 +4,14 @@ import { Form, Alert } from 'antd';
 
 interface CustomFieldProps {
   name: string;
+  fieldName?:string;
+  grid?: boolean;
+  keys?: Array<{
+    type: string,
+    name: string,
+    options?: Array<{value: string, label: string}>,
+    condition?: {function: Function, action: {[key: string]: any}}
+  }>;
   label?: string;
   component?: any;
   children?: Element;
@@ -19,12 +27,12 @@ interface CustomFieldProps {
 export type IField = WrappedFieldProps & CustomFieldProps;
 
 const RenderField = (render: Function) => (props: IField) => {
-  const { input, meta: { touched, error }, label, ...rest } = props;
+  const { input, meta: { pristine, touched, error }, label, ...rest } = props;
 
   return (
     <Form.Item {...label ? {label} : {wrapperCol: {xs: {span: 24, offset: 0}, sm: {span: 20, offset: 4}}}} >
       {render({input, label, ...rest})}
-      {touched && error && <Alert {...error} />}
+      {(!pristine || touched) && error && <Alert {...error} />}
     </Form.Item>
   )
 }
