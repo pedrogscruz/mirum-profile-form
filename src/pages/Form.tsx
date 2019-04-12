@@ -1,5 +1,6 @@
 import React from 'react';
 import axios, { AxiosResponse } from 'axios'
+import { connect } from 'react-redux';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
 import isValidEmail from 'sane-email-validation';
 import { RouteComponentProps } from 'react-router-dom';
@@ -8,6 +9,7 @@ import { Form as AntForm, Button, Select, Row, Col } from 'antd';
 const Option = Select.Option;
 
 import classes from './FormStyles';
+import RenderInputFile from '../components/RenderInputFile';
 import RenderObjectInput from '../components/RenderObjectInput';
 import RenderInput from '../components/RenderInput';
 import RenderSlider from '../components/RenderSlider';
@@ -16,6 +18,7 @@ import RenderSelect from '../components/RenderSelect';
 import RenderInterests from '../components/RenderInterests';
 import RenderCheck from '../components/RenderCheck';
 import RenderWithCondition from '../components/RenderWithCondition';
+import { setFormCopy } from '../actions/formActions';
 
 type IForm = {
   name: {first: string, last: string};
@@ -65,9 +68,6 @@ type Options = Array<{value:string, label:string}>
 type State = {
   countries: Options;
   states: Options;
-  changeFormField: Function | null;
-  disableCountry: boolean;
-  disableState: boolean;
 }
 
 
@@ -76,25 +76,28 @@ class Form extends React.Component<RouteComponentProps> {
   state: State = {
     countries: new Array,
     states: new Array,
-    changeFormField: null,
-    disableCountry: false,
-    disableState: false,
   }
 
   componentDidMount() {
     axios.get('https://restcountries.eu/rest/v2/all')
       .then(this.formatCoutries);
   }
+  
+  redirectToProfile = (reset: Function) => () => {
+    const { setFormCopy, values } = this.props as any;
+    console.log(values);
+    setFormCopy(values);
+    reset();
+    this.props.history.push('/profile');
+  };
 
   formatCoutries = ({data}: AxiosResponse<any>) => {
     this.setState({countries: data.map(({name, alpha2Code}: any) => ({value: alpha2Code, label: name}))})
-  }
-  
-  redirectToProfile = () => this.props.history.push('/profile');
+  };
 
   timeOut = (ms:number) => new Promise(resolve => setTimeout(resolve, ms));
 
-  random = (qtd: number) => Math.floor(Math.random() * qtd);
+  random = (range: number) => Math.floor(Math.random() * range);
 
   randomState = (states: Array<any>, index: number) => new Promise( async (resolve) => {
     await this.timeOut(this.random(500)), length = this.random(100);
@@ -116,24 +119,25 @@ class Form extends React.Component<RouteComponentProps> {
     this.setState({states});
   };
   
-  handleCountryChange = (value: any) => {
-    let { changeFormField } = this.state;
-    if (changeFormField) {
-      changeFormField('state', '')
-      changeFormField('country', value)
-    }
+  handleCountryChange = (changeFormField: Function) => (value: any) => {
+    changeFormField('state', '');
+    changeFormField('country', value);
     this.getStates();
   };
 
   Form = (props: InjectedFormProps<IForm>) => {
-    const { handleSubmit, change } = props;
-    this.state.changeFormField = change;
+    const { handleSubmit, change, reset } = props;
     return (
       <AntForm
-        onSubmit={handleSubmit(this.redirectToProfile)}
+        onSubmit={handleSubmit(this.redirectToProfile(reset))}
         labelCol={{ xs: { span: 24 }, sm: { span: 4 } }}
         wrapperCol={{ xs: { span: 24 }, sm: { span: 20 } }}
       >
+        <Field
+          name="photo"
+          label="Foto"
+          component={RenderInputFile}
+        />
         <Field
           name='name'
           label="Nome"
@@ -189,7 +193,7 @@ class Form extends React.Component<RouteComponentProps> {
           label="País"
           name="country"
           component={RenderSelect}
-          onChange={this.handleCountryChange}
+          onChange={this.handleCountryChange(change)}
         >
           <Option value={''}></Option>
           {this.renderOptions(this.state.countries)}
@@ -230,7 +234,8 @@ class Form extends React.Component<RouteComponentProps> {
   ReduxForm = reduxForm({
     form: 'fieldArrays',
     destroyOnUnmount: false,
-    validate
+    validate,
+    initialValues: (this.props as any).formInitialValues
   })(this.Form);
 
   render() {
@@ -244,4 +249,4 @@ class Form extends React.Component<RouteComponentProps> {
   }
 }
 
-export default Form;
+export default (Form);

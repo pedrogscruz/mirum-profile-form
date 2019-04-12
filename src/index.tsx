@@ -7,13 +7,14 @@ import 'antd/dist/antd.css';
 
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import { reducer } from 'redux-form';
 import reduxThunk from 'redux-thunk';
 
 // importing the App component to pass it to ReactDOM
 import App from './App';
+import formReducer from './reducers/formReducer';
 
-const store = createStore(combineReducers({form: formReducer}), {}, applyMiddleware(reduxThunk));
+const store = createStore(combineReducers({form: reducer, formCopy: formReducer}), {}, applyMiddleware(reduxThunk));
 
 // rendering the App with Redux
 ReactDOM.render(
