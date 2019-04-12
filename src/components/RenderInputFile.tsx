@@ -19,7 +19,8 @@ const beforeUpload = (setLoading: Function, setImageUrl: Function, onChange: Fun
     message.error('Image must smaller than 2MB!');
   if (!(isJPG && isLt2M))
     return false;
-
+    
+  setLoading(true);
   const reader = new FileReader();
   reader.onload = (e: any) => {
     setLoading(false);
