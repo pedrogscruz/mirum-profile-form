@@ -64,7 +64,6 @@ class Profile extends Component<IProfile & RouteComponentProps> {
 
   handleEdit = () => {
     const { setInitialValues, setFormCopy, formCopy, history } = this.props;
-    console.log(formCopy);
     setInitialValues(formCopy);
     setFormCopy({});
     history.push('/form');

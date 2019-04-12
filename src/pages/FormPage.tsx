@@ -29,4 +29,4 @@ class FormPage extends React.Component<IForm> {
   }
 }
 
-export default connect(() => {}, { getCountries })(FormPage);
+export default connect(() => ({}), { getCountries })(FormPage);

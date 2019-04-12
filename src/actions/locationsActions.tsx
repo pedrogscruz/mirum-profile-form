@@ -3,7 +3,7 @@ export const GET_STATES = 'GET_STATES';
 
 import axios, { AxiosResponse } from 'axios';
 
-const formatCoutries = ({data}: AxiosResponse<any>) => ({countries: data.map(({name, alpha2Code}: any) => ({value: alpha2Code, label: name}))})
+const formatCoutries = ({data}: AxiosResponse<any>) => data.map(({name, alpha2Code}: any) => ({value: alpha2Code, label: name}));
 
 const timeOut = (ms:number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -32,8 +32,8 @@ const statesGenerator = async () => {
 export function getCountries(value: any) {
 	return async (dispatch: Function) => {
 		try {
-			let {data} = await axios.get('https://restcountries.eu/rest/v2/all');
-			dispatch({ type: GET_COUNTRIES, payload: formatCoutries(data) });
+			let response = await axios.get('https://restcountries.eu/rest/v2/all');
+			dispatch({ type: GET_COUNTRIES, payload: formatCoutries(response) });
 		} catch(err) {
 			console.log(err);
 		}

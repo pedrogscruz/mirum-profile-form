@@ -10,7 +10,7 @@ const classes = StyleSheet.create({
   }
 });
 
-const beforeUpload = (setLoading: Function, setImageUrl: Function, onChange: Function) => (file: any) => {
+const beforeUpload = (setLoading: Function, onChange: Function) => (file: any) => {
   const isJPG = file.type === 'image/jpeg';
   if (!isJPG)
     message.error('You can only upload JPG file!');
@@ -24,7 +24,6 @@ const beforeUpload = (setLoading: Function, setImageUrl: Function, onChange: Fun
   const reader = new FileReader();
   reader.onload = (e: any) => {
     setLoading(false);
-    setImageUrl(e.target.result);
     onChange(e.target.result);
   };
   reader.readAsDataURL(file);
@@ -32,20 +31,19 @@ const beforeUpload = (setLoading: Function, setImageUrl: Function, onChange: Fun
 }
 
 const renderInputFile = RenderField((props: IField) => {
-  const { input: {onChange, ...inputRest}, label, ...rest } = props;
+  const { input: {onChange, value, ...inputRest}, label, ...rest } = props;
   const [loading, setLoading] = useState();
-  const [imageUrl, setImageUrl] = useState();
   return (
     <Fragment>
       <Upload
         listType="picture-card"
         className="avatar-uploader"
         showUploadList={false}
-        beforeUpload={beforeUpload(setLoading, setImageUrl, onChange)}
+        beforeUpload={beforeUpload(setLoading, onChange)}
         {...inputRest}
       >
-        {imageUrl ?
-          <img className={css(classes.img)} src={imageUrl} alt="avatar" />
+        {value ?
+          <img className={css(classes.img)} src={value} alt="avatar" />
         :
           <div>
             <Icon type={loading ? 'loading' : 'plus'} />
@@ -53,9 +51,8 @@ const renderInputFile = RenderField((props: IField) => {
           </div>
         }
       </Upload>
-      {imageUrl &&
+      {value &&
         <Button icon="delete" onClick={() => {
-          setImageUrl('');
           onChange('');
         }} />
       }

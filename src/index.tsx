@@ -13,8 +13,12 @@ import reduxThunk from 'redux-thunk';
 // importing the App component to pass it to ReactDOM
 import App from './App';
 import formReducer from './reducers/formReducer';
+import locationsReducer from './reducers/locationsReducer';
 
-const store = createStore(combineReducers({form: reducer, formCopy: formReducer}), {}, applyMiddleware(reduxThunk));
+const store = createStore(
+  combineReducers({form: reducer, formCopy: formReducer, locations: locationsReducer}),
+  {}, applyMiddleware(reduxThunk)
+);
 
 // rendering the App with Redux
 ReactDOM.render(
