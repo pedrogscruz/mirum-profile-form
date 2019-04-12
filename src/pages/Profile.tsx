@@ -58,7 +58,7 @@ class Profile extends Component<IProfile & RouteComponentProps> {
     }
   }
 
-  renderInterests = (interests: Array<string>) => interests && interests.map((item, index) => index+1 === interests.length ? `e ${item}`:`${item}, `)
+  renderInterests = (interests: Array<string>) => interests && interests.map((item, index) => index+2===interests.length?item:index+1===interests.length?` e ${item}`:`${item}, `)
 
   handleConfirm = () => axios.post('/fakeUrl', this.props.formCopy);
 
